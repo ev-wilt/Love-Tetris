@@ -19,12 +19,12 @@ end
 
 function board.drawMatrix()
     for x = board.minX, board.maxX do
-        for y = board.minY, board.maxY do
+        for y = board.minY, board.maxY - 2 do
             if board.matrix[x][y] == 0 then
                 love.graphics.setColor(196, 207, 161)
-                love.graphics.rectangle("fill", 50 + x * 25, 50 + y * 25, 25, 25)
+                love.graphics.rectangle("fill", 50 + x * 20, 50 + y * 20, 20, 20)
             elseif board.matrix[x][y] == nil then
-                love.graphics.draw(board.boarder, 50 + x * 25, 50 + y * 25)
+                love.graphics.draw(board.boarder, 50 + x * 20, 50 + y * 20)
             end
         end
     end
