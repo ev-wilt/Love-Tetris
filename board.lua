@@ -48,7 +48,7 @@ function board:pushPiece()
 end
 
 -- Removes a piece from the piece queue.
-function board::popPiece()
+function board:popPiece()
     table.remove(self.pieces, 1)
 end
 
