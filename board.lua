@@ -43,7 +43,13 @@ end
 
 -- Adds a new random piece to the piece queue.
 function board:pushPiece()
-    
+    newPiece = self.pieces[math.random(#self.pieces)]
+    table.insert(self.pieces, newPiece)
+end
+
+-- Removes a piece from the piece queue.
+function board::popPiece()
+    table.remove(self.pieces, 1)
 end
 
 
