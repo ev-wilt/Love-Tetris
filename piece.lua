@@ -1,8 +1,15 @@
 local piece = {
     rotations = {},
     sprite = {},
-    local currentPosition = {}
+    currentPosition = {}
 }
+
+-- Initializes any new instances of the piece class.
+function piece:init(properties)
+    properties = properties or {}
+    setmetatable(properties, self)
+    self.__index = self
+end
 
 -- Sets the current position of the piece, where X and Y represent
 -- the coordinates of the top-leftmost sprite of the piece.
@@ -14,7 +21,7 @@ end
 -- Gets the current position of the piece, where X and Y represent
 -- the coordinates of the top-leftmost sprite of the piece.
 function piece:getCurrentPosition()
-    return piece.currentPosition
+    return self.currentPosition
 end
 
 -- Draws the piece on the board at its current position.

@@ -1,5 +1,14 @@
 local board = {
     matrix = {},
+    pieces = {
+        IPiece = require("IPiece"),
+        JPiece = require("JPiece"),
+        LPiece = require("LPiece"),
+        OPiece = require("OPiece"),
+        SPiece = require("SPiece"),
+        TPiece = require("TPiece"),
+        ZPiece = require("ZPiece")
+    },
     pieceQueue = {},
     minX = 1, maxX = 12,
     minY = 1, maxY = 20,
@@ -33,6 +42,9 @@ function board:drawMatrix()
 end
 
 -- Adds a new random piece to the piece queue.
+function board:pushPiece()
+    
+end
 
 
 return board

@@ -1,4 +1,5 @@
-local TPiece = piece:new {
+piece = require("piece")
+local TPiece = piece:init {
     rotations = {
         {
             0, 0, 0,

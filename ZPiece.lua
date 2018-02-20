@@ -1,4 +1,5 @@
-local ZPiece = piece:new {
+piece = require("piece")
+local ZPiece = piece:init {
     rotations = {
         {
             0, 0, 0,

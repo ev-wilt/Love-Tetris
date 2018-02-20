@@ -1,4 +1,5 @@
-local JPiece = piece:new {
+piece = require("piece")
+local JPiece = piece:init {
     rotations = {
         {
             1, 1, 1,
