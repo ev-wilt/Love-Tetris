@@ -45,8 +45,8 @@ end
 function board:drawNextPiece()
     nextPiece = self.pieceQueue[1]
     defaultRotation = nextPiece.rotations[1]
-    for x = 1, #defaultRotation do
-        for y = 1, #defaultRotation[x] do
+    for y = 1, #defaultRotation do
+        for x = 1, #defaultRotation[y] do
             if defaultRotation[y][x] == 1 then
                 love.graphics.draw(nextPiece.sprite, 320 + x * 20, 340 + y * 20)
             end
