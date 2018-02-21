@@ -47,8 +47,8 @@ function board:drawNextPiece()
     defaultRotation = nextPiece.rotations[1]
     for x = 1, #defaultRotation do
         for y = 1, #defaultRotation[x] do
-            if defaultRotation[x][y] == 1 then
-                love.graphics.draw(nextPiece.sprite, 350 + x * 20, 300 + y * 20)
+            if defaultRotation[y][x] == 1 then
+                love.graphics.draw(nextPiece.sprite, 320 + x * 20, 340 + y * 20)
             end
         end
     end
