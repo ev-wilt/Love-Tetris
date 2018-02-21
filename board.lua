@@ -44,7 +44,7 @@ end
 -- Draws the next piece in the queue.
 function board:drawNextPiece()
     nextPiece = self.pieceQueue[1]
-    defaultRotation = nextPiece["rotations"][1]
+    defaultRotation = nextPiece.rotations[1]
     for x = 1, #defaultRotation do
         for y = 1, #defaultRotation[x] do
             if defaultRotation[x][y] == 1 then
