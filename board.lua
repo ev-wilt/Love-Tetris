@@ -1,13 +1,13 @@
 local board = {
     matrix = {},
     pieces = {
-        IPiece = require("IPiece"),
-        JPiece = require("JPiece"),
-        LPiece = require("LPiece"),
-        OPiece = require("OPiece"),
-        SPiece = require("SPiece"),
-        TPiece = require("TPiece"),
-        ZPiece = require("ZPiece")
+        [1] = require("IPiece"),
+        [2] = require("JPiece"),
+        [3] = require("LPiece"),
+        [4] = require("OPiece"),
+        [5] = require("SPiece"),
+        [6] = require("TPiece"),
+        [7] = require("ZPiece")
     },
     pieceQueue = {},
     minX = 1, maxX = 12,
@@ -41,15 +41,28 @@ function board:drawMatrix()
     end
 end
 
+-- Draws the next piece in the queue.
+function board:drawNextPiece()
+    nextPiece = self.pieceQueue[1]
+    defaultRotation = nextPiece["rotations"][1]
+    for x = 1, #defaultRotation do
+        for y = 1, #defaultRotation[x] do
+            if defaultRotation[x][y] == 1 then
+                love.graphics.draw(nextPiece.sprite, 350 + x * 20, 300 + y * 20)
+            end
+        end
+    end
+end
+
 -- Adds a new random piece to the piece queue.
 function board:pushPiece()
     newPiece = self.pieces[math.random(#self.pieces)]
-    table.insert(self.pieces, newPiece)
+    table.insert(self.pieceQueue, newPiece)
 end
 
 -- Removes a piece from the piece queue.
 function board:popPiece()
-    table.remove(self.pieces, 1)
+    table.remove(self.pieceQueue, 1)
 end
 
 

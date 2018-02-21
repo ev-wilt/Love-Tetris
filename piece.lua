@@ -9,6 +9,7 @@ function piece:init(properties)
     properties = properties or {}
     setmetatable(properties, self)
     self.__index = self
+    return properties
 end
 
 -- Sets the current position of the piece, where X and Y represent
