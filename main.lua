@@ -8,6 +8,7 @@ function love.load()
     board = require("board")
     board:initMatrix()
     board:pushPiece()
+    board:addNextPiece()
 end
 
 function love.update(dt)
