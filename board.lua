@@ -35,14 +35,6 @@ function board:addNextPiece()
     self.currentPieceLoc = {y = 0, x = 4}
     self.currentPiece = self:popPiece()
     self:pushPiece()
-    self.currentPieceRotation = self.currentPiece.rotations[1]
-    for y = 1, #self.currentPieceRotation do
-        for x = 1, #self.currentPieceRotation[y] do
-            if self.currentPieceRotation[y][x] == 1 then
-                self.matrix[x + self.currentPieceLoc.x][y +  self.currentPieceLoc.y] = self.currentPiece.sprite
-            end
-        end
-    end
 end
 
 -- Draws the board, including background, pieces that have already landed, and the edge walls.
@@ -54,8 +46,18 @@ function board:drawMatrix()
                 love.graphics.rectangle("fill", 50 + x * 20, 50 + y * 20, 20, 20)
             elseif self.matrix[x][y] == nil then
                 love.graphics.draw(self.boarder, 50 + x * 20, 50 + y * 20)
-            else
-                love.graphics.draw(self.matrix[x][y], 50 + x * 20, 50 + y * 20)
+            end
+        end
+    end
+end
+
+-- Draws the piece currently being controlled by the player.
+function board:drawCurrentPiece()
+    self.currentPieceRotation = self.currentPiece.rotations[1]
+    for y = 1, #self.currentPieceRotation do
+        for x = 1, #self.currentPieceRotation[y] do
+            if self.currentPieceRotation[y][x] == 1 then
+                love.graphics.draw(self.currentPiece.sprite, 50 + self.currentPieceLoc.x * 20 + x * 20, 50 + self.currentPieceLoc.y * 20 + y * 20)
             end
         end
     end

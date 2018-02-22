@@ -17,5 +17,6 @@ end
 
 function love.draw()
     board:drawMatrix()
+    board:drawCurrentPiece()
     board:drawNextPiece()
 end
