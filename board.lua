@@ -98,9 +98,12 @@ function board:pieceWillCollide(xShift, yShift)
 end
 
 -- Moves each sprite in the current piece down one cell if possible.
-function board:shiftPieceDown()
-    if self:pieceWillCollide(0, 1) == false then
-        self.currentPieceLoc.y = self.currentPieceLoc.y + 1
+-- Params:  xShift = Change in x coordinates
+--          yShift = Change in y coordinates
+function board:shiftPiece(xShift, yShift)
+    if self:pieceWillCollide(xShift, yShift) == false then
+        self.currentPieceLoc.x = self.currentPieceLoc.x + xShift
+        self.currentPieceLoc.y = self.currentPieceLoc.y + yShift
     end
 end
 

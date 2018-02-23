@@ -13,7 +13,11 @@ end
 
 function love.keypressed(key)
     if key == "s" then
-        board:shiftPieceDown()
+        board:shiftPiece(0, 1)
+    elseif key == "d" then 
+        board:shiftPiece(1, 0)
+    elseif key == "a" then 
+        board:shiftPiece(-1, 0)
     elseif key == "escape" then
         love.event.quit()
     end
