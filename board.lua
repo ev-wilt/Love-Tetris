@@ -33,7 +33,7 @@ end
 
 -- Adds the next piece from the piece queue into the board.
 function board:addNextPiece()
-    self.currentPieceLoc = {y = 0, x = 4}
+    self.currentPieceLoc = {y = 2, x = 4}
     self.currentPiece = self:popPiece()
     self.currentPieceRotation = self.currentPiece.rotations[1]
     self:pushPiece()
@@ -42,7 +42,7 @@ end
 -- Draws the board, including background, pieces that have already landed, and the edge walls.
 function board:drawMatrix()
     for x = self.minX, self.maxX do
-        for y = self.minY, self.maxY - 2 do
+        for y = self.minY + 2, self.maxY do
             if self.matrix[x][y] == 0 then
                 love.graphics.setColor(196, 207, 161)
                 love.graphics.rectangle("fill", 50 + x * self.spriteSize, 50 + y * self.spriteSize, self.spriteSize, self.spriteSize)
@@ -75,7 +75,7 @@ function board:drawNextPiece()
     for y = 1, #defaultRotation do
         for x = 1, #defaultRotation[y] do
             if defaultRotation[y][x] == 1 then
-                love.graphics.draw(nextPiece.sprite, 320 + x * 20, 340 + y * 20)
+                love.graphics.draw(nextPiece.sprite, 320 + x * 20, 360 + y * 20)
             end
         end
     end
