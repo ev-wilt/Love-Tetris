@@ -15,7 +15,8 @@ local board = {
     pieceQueue = {},
     minX = 1, maxX = 12,
     minY = 1, maxY = 20,
-    boarder = love.graphics.newImage("sprites/boarder.png")
+    boarder = love.graphics.newImage("sprites/boarder.png"),
+    spriteSize = 20
 }
 
 -- Makes the matrix into a 2D matrix and sets all cells to 0.
@@ -34,6 +35,7 @@ end
 function board:addNextPiece()
     self.currentPieceLoc = {y = 0, x = 4}
     self.currentPiece = self:popPiece()
+    self.currentPieceRotation = self.currentPiece.rotations[1]
     self:pushPiece()
 end
 
@@ -43,9 +45,9 @@ function board:drawMatrix()
         for y = self.minY, self.maxY - 2 do
             if self.matrix[x][y] == 0 then
                 love.graphics.setColor(196, 207, 161)
-                love.graphics.rectangle("fill", 50 + x * 20, 50 + y * 20, 20, 20)
+                love.graphics.rectangle("fill", 50 + x * self.spriteSize, 50 + y * self.spriteSize, self.spriteSize, self.spriteSize)
             elseif self.matrix[x][y] == nil then
-                love.graphics.draw(self.boarder, 50 + x * 20, 50 + y * 20)
+                love.graphics.draw(self.boarder, 50 + x * self.spriteSize, 50 + y * self.spriteSize)
             end
         end
     end
@@ -53,11 +55,14 @@ end
 
 -- Draws the piece currently being controlled by the player.
 function board:drawCurrentPiece()
-    self.currentPieceRotation = self.currentPiece.rotations[1]
     for y = 1, #self.currentPieceRotation do
         for x = 1, #self.currentPieceRotation[y] do
             if self.currentPieceRotation[y][x] == 1 then
-                love.graphics.draw(self.currentPiece.sprite, 50 + self.currentPieceLoc.x * 20 + x * 20, 50 + self.currentPieceLoc.y * 20 + y * 20)
+                love.graphics.draw(
+                    self.currentPiece.sprite,
+                    50 + self.spriteSize * (self.currentPieceLoc.x + x),
+                    50 + self.spriteSize * (self.currentPieceLoc.y + y)
+                )
             end
         end
     end
@@ -73,6 +78,26 @@ function board:drawNextPiece()
                 love.graphics.draw(nextPiece.sprite, 320 + x * 20, 340 + y * 20)
             end
         end
+    end
+end
+
+function board:checkCollision()
+    for y = 1, #self.currentPieceRotation do
+        for x = 1, #self.currentPieceRotation[y] do
+            if self.currentPieceRotation[y][x] == 1 then
+                if self.matrix[x + self.currentPieceLoc.x][y + self.currentPieceLoc.y + 1] == 1 then
+                -- Collision logic will go here
+                end
+            end
+        end
+    end
+    return true
+end
+
+-- Moves each sprite in the current piece down one cell if possible.
+function board:shiftPieceDown()
+    if self:checkCollision() == true then
+        self.currentPieceLoc.y = self.currentPieceLoc.y + 1
     end
 end
 

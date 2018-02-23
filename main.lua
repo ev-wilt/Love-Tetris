@@ -11,8 +11,12 @@ function love.load()
     board:addNextPiece()
 end
 
-function love.update(dt)
-
+function love.keypressed(key)
+    if key == "s" then
+        board:shiftPieceDown()
+    elseif key == "escape" then
+        love.event.quit()
+    end
 end
 
 function love.draw()
