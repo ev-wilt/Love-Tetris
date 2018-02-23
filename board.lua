@@ -81,22 +81,25 @@ function board:drawNextPiece()
     end
 end
 
-function board:checkCollision()
+-- Checks for possible collisions when the piece is moved.
+-- Params:  xShift = Change in x coordinates
+--          yShift = Change in y coordinates
+function board:pieceWillCollide(xShift, yShift)
     for y = 1, #self.currentPieceRotation do
         for x = 1, #self.currentPieceRotation[y] do
             if self.currentPieceRotation[y][x] == 1 then
-                if self.matrix[x + self.currentPieceLoc.x][y + self.currentPieceLoc.y + 1] == 1 then
-                -- Collision logic will go here
+                if self.matrix[x + self.currentPieceLoc.x + xShift][y + self.currentPieceLoc.y + yShift] == 1 then
+                    return true
                 end
             end
         end
     end
-    return true
+    return false
 end
 
 -- Moves each sprite in the current piece down one cell if possible.
 function board:shiftPieceDown()
-    if self:checkCollision() == true then
+    if self:pieceWillCollide(0, 1) == false then
         self.currentPieceLoc.y = self.currentPieceLoc.y + 1
     end
 end
