@@ -88,7 +88,8 @@ function board:pieceWillCollide(xShift, yShift)
     for y = 1, #self.currentPieceRotation do
         for x = 1, #self.currentPieceRotation[y] do
             if self.currentPieceRotation[y][x] == 1 then
-                if self.matrix[x + self.currentPieceLoc.x + xShift][y + self.currentPieceLoc.y + yShift] == 1 then
+                local nextCell =  self.matrix[x + self.currentPieceLoc.x + xShift][y + self.currentPieceLoc.y + yShift]
+                if nextCell == 1 or nextCell == nil then
                     return true
                 end
             end
@@ -97,7 +98,7 @@ function board:pieceWillCollide(xShift, yShift)
     return false
 end
 
--- Moves each sprite in the current piece down one cell if possible.
+-- Updates the current piece location with the given parameters.
 -- Params:  xShift = Change in x coordinates
 --          yShift = Change in y coordinates
 function board:shiftPiece(xShift, yShift)
