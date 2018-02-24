@@ -6,7 +6,7 @@ function love.load()
     love.graphics.setBackgroundColor(65, 65, 65)
     math.randomseed(os.time())
     board = require("board")
-    downTimer = 0
+    dropTimer = 0
     speedMultiplier = 1
     board:initMatrix()
     board:pushPiece()
@@ -14,10 +14,10 @@ function love.load()
 end
 
 function love.update(dt)
-    downTimer = downTimer + dt * speedMultiplier
-    if downTimer > 1 then
+    dropTimer = dropTimer + dt * speedMultiplier
+    if dropTimer > 1 then
         board:shiftPiece(0, 1)
-        downTimer = downTimer - 1
+        dropTimer = dropTimer - 1
     end
 end
 
