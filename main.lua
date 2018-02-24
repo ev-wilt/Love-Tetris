@@ -6,9 +6,19 @@ function love.load()
     love.graphics.setBackgroundColor(65, 65, 65)
     math.randomseed(os.time())
     board = require("board")
+    downTimer = 0
+    speedMultiplier = 1
     board:initMatrix()
     board:pushPiece()
     board:addNextPiece()
+end
+
+function love.update(dt)
+    downTimer = downTimer + dt * speedMultiplier
+    if downTimer > 1 then
+        board:shiftPiece(0, 1)
+        downTimer = downTimer - 1
+    end
 end
 
 function love.keypressed(key)
