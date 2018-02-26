@@ -48,6 +48,8 @@ function board:drawMatrix()
                 love.graphics.rectangle("fill", 50 + x * self.spriteSize, 50 + y * self.spriteSize, self.spriteSize, self.spriteSize)
             elseif self.matrix[x][y] == nil then
                 love.graphics.draw(self.boarder, 50 + x * self.spriteSize, 50 + y * self.spriteSize)
+            elseif self.matrix[x][y]:type() == "Image" then
+                love.graphics.draw(self.matrix[x][y], 50 + x * self.spriteSize, 50 + y * self.spriteSize)
             end
         end
     end
@@ -89,7 +91,7 @@ function board:pieceWillCollide(xShift, yShift)
         for x = 1, #self.currentPieceRotation[y] do
             if self.currentPieceRotation[y][x] == 1 then
                 local nextCell =  self.matrix[x + self.currentPieceLoc.x + xShift][y + self.currentPieceLoc.y + yShift]
-                if nextCell == 1 or nextCell == nil then
+                if nextCell ~= 0 then
                     return true
                 end
             end
@@ -99,13 +101,28 @@ function board:pieceWillCollide(xShift, yShift)
 end
 
 -- Updates the current piece location with the given parameters.
+-- If the piece has landed, the next piece is added.
 -- Params:  xShift = Change in x coordinates
 --          yShift = Change in y coordinates
 function board:shiftPiece(xShift, yShift)
     if self:pieceWillCollide(xShift, yShift) == false then
         self.currentPieceLoc.x = self.currentPieceLoc.x + xShift
         self.currentPieceLoc.y = self.currentPieceLoc.y + yShift
+    elseif self:pieceWillCollide(xShift, yShift) == true and xShift == 0 then
+        self:addPieceToMatrix()
     end
+end
+
+-- Adds the currently falling piece to the matrix, meaning it has fallen.
+function board:addPieceToMatrix()
+    for y = 1, #self.currentPieceRotation do
+        for x = 1, #self.currentPieceRotation[y] do
+            if self.currentPieceRotation[y][x] == 1 then
+                self.matrix[x + self.currentPieceLoc.x][y + self.currentPieceLoc.y] = self.currentPiece.sprite
+            end
+        end
+    end
+    self:addNextPiece()
 end
 
 -- Adds a new random piece to the piece queue.
