@@ -1,7 +1,6 @@
 local board = {
     currentPiece = {},
     currentPieceLoc = {},
-    currentPieceRotation = {},
     matrix = {},
     pieces = {
         [1] = require("IPiece"),
@@ -16,6 +15,7 @@ local board = {
     minX = 1, maxX = 12,
     minY = 1, maxY = 20,
     boarder = love.graphics.newImage("sprites/boarder.png"),
+    rotationIndex = 1,
     spriteSize = 20
 }
 
@@ -35,7 +35,7 @@ end
 function board:addNextPiece()
     self.currentPieceLoc = {y = 2, x = 4}
     self.currentPiece = self:popPiece()
-    self.currentPieceRotation = self.currentPiece.rotations[1]
+    self.currentPieceRotation = 1
     self:pushPiece()
 end
 
@@ -57,9 +57,9 @@ end
 
 -- Draws the piece currently being controlled by the player.
 function board:drawCurrentPiece()
-    for y = 1, #self.currentPieceRotation do
-        for x = 1, #self.currentPieceRotation[y] do
-            if self.currentPieceRotation[y][x] == 1 then
+    for y = 1, #self.currentPiece.rotations[self.rotationIndex] do
+        for x = 1, #self.currentPiece.rotations[self.rotationIndex][y] do
+            if self.currentPiece.rotations[self.rotationIndex][y][x] == 1 then
                 love.graphics.draw(
                     self.currentPiece.sprite,
                     50 + self.spriteSize * (self.currentPieceLoc.x + x),
@@ -87,11 +87,14 @@ end
 -- Params:  xShift = Change in x coordinates
 --          yShift = Change in y coordinates
 function board:pieceWillCollide(xShift, yShift)
-    for y = 1, #self.currentPieceRotation do
-        for x = 1, #self.currentPieceRotation[y] do
-            if self.currentPieceRotation[y][x] == 1 then
-                local nextCell =  self.matrix[x + self.currentPieceLoc.x + xShift][y + self.currentPieceLoc.y + yShift]
-                if nextCell ~= 0 then
+    for y = 1, #self.currentPiece.rotations[self.rotationIndex] do
+        for x = 1, #self.currentPiece.rotations[self.rotationIndex][y] do
+            if self.currentPiece.rotations[self.rotationIndex][y][x] == 1 then
+                if x + self.currentPieceLoc.x + xShift < self.minX or x + self.currentPieceLoc.x + xShift > self.maxX then
+                    return true
+                elseif y + self.currentPieceLoc.y + yShift < self.minY then
+                    return true
+                elseif self.matrix[x + self.currentPieceLoc.x + xShift][y + self.currentPieceLoc.y + yShift] ~= 0 then
                     return true
                 end
             end
@@ -115,14 +118,45 @@ end
 
 -- Adds the currently falling piece to the matrix, meaning it has fallen.
 function board:addPieceToMatrix()
-    for y = 1, #self.currentPieceRotation do
-        for x = 1, #self.currentPieceRotation[y] do
-            if self.currentPieceRotation[y][x] == 1 then
+    for y = 1, #self.currentPiece.rotations[self.rotationIndex] do
+        for x = 1, #self.currentPiece.rotations[self.rotationIndex][y] do
+            if self.currentPiece.rotations[self.rotationIndex][y][x] == 1 then
                 self.matrix[x + self.currentPieceLoc.x][y + self.currentPieceLoc.y] = self.currentPiece.sprite
             end
         end
     end
     self:addNextPiece()
+end
+
+-- Rotates the current piece, if possible.
+-- If the next piece will be out of bounds, it's "wall-kicked" back into the board.
+function board:rotatePiece()
+    if self.rotationIndex < 4 then
+        self.rotationIndex = self.rotationIndex + 1
+    else
+        self.rotationIndex = 1
+    end
+    if board:pieceWillCollide(0, 0) == true then 
+        local shift = 1
+        while shift < 2 and board:pieceWillCollide(shift, 0) == true and board:pieceWillCollide(-shift, 0) == true and board:pieceWillCollide(0, shift) == true do
+            shift = shift + 1
+        end
+        if board:pieceWillCollide(shift, 0) == false then
+            self:shiftPiece(shift, 0)
+            return
+        elseif board:pieceWillCollide(-shift, 0) == false then
+            self:shiftPiece(-shift, 0)
+            return
+        elseif board:pieceWillCollide(0, shift) == false then
+            self:shiftPiece(0, shift)
+            return
+        end
+        if self.rotationIndex == 1 then
+            self.rotationIndex = 4
+        else
+            self.rotationIndex = self.rotationIndex - 1
+        end
+    end
 end
 
 -- Adds a new random piece to the piece queue.

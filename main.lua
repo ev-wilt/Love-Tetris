@@ -28,6 +28,8 @@ function love.keypressed(key)
         board:shiftPiece(1, 0)
     elseif key == "a" then 
         board:shiftPiece(-1, 0)
+    elseif key == "space" then
+        board:rotatePiece()
     elseif key == "escape" then
         love.event.quit()
     end
