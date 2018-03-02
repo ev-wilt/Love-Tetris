@@ -7,9 +7,9 @@ local LPiece = piece:init {
             {1, 0, 0}
         },
         {
-            {1, 1},
-            {0, 1},
-            {0, 1}
+            {1, 1, 0},
+            {0, 1, 0},
+            {0, 1, 0}
         },
         {
             {0, 0, 1},
@@ -17,9 +17,9 @@ local LPiece = piece:init {
             {0, 0, 0}
         },
         {
-            {1, 0},
-            {1, 0},
-            {1, 1}
+            {0, 1, 0},
+            {0, 1, 0},
+            {0, 1, 1}
         }
     },
     sprite = love.graphics.newImage("sprites/LPiece.png")

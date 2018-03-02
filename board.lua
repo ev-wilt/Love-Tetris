@@ -73,9 +73,9 @@ end
 -- Draws the next piece in the queue.
 function board:drawNextPiece()
     love.graphics.setColor(107, 115, 83)
-    love.graphics.rectangle("fill", 325, 380, 90, 90)
+    love.graphics.rectangle("fill", 320, 370, 100, 100)
     love.graphics.setColor(196, 207, 161)
-    love.graphics.rectangle("fill", 330, 385, 80, 80)
+    love.graphics.rectangle("fill", 325, 375, 90, 90)
     local nextPiece = self.pieceQueue[1]
     local defaultRotation = nextPiece.rotations[1]
     for y = 1, #defaultRotation do
@@ -185,7 +185,7 @@ end
 
 -- Restarts the game if a set piece is above the playfield.
 function board:checkGameOver()
-    for y = self.minY, self.minY + 2 do
+    for y = self.minY, self.minY + 3 do
         for x = self.minX + 1, self.maxX - 1 do
             if self.matrix[y][x] ~= 0 then
                 self:initMatrix()

@@ -7,9 +7,9 @@ local JPiece = piece:init {
             {0, 0, 1}
         },
         {
-            {1, 1},
-            {1, 0},
-            {1, 0}
+            {0, 1, 1},
+            {0, 1, 0},
+            {0, 1, 0}
         },
         {
             {1, 0, 0},
@@ -17,9 +17,9 @@ local JPiece = piece:init {
             {0, 0, 0}
         },
         {
-            {0, 1},
-            {0, 1},
-            {1, 1}
+            {0, 1, 0},
+            {0, 1, 0},
+            {1, 1, 0}
         }
     },
     sprite = love.graphics.newImage("sprites/JPiece.png")
