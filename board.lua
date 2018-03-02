@@ -35,7 +35,7 @@ end
 function board:addNextPiece()
     self.currentPieceLoc = {y = 2, x = 4}
     self.currentPiece = self:popPiece()
-    self.currentPieceRotation = 1
+    self.rotationIndex = 1
     self:pushPiece()
 end
 
@@ -165,7 +165,6 @@ function board:checkClearRows()
     for y = self.minY, self.maxY do
         local fullRowCounter = 0
         for x = self.minX + 1, self.maxX - 1 do
-            print(self.matrix[y][x])
             if self.matrix[y][x] ~= 0 then
                 fullRowCounter = fullRowCounter + 1
                 if fullRowCounter == self.maxX - 2 then
