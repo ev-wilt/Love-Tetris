@@ -125,6 +125,7 @@ function board:addPieceToMatrix()
             end
         end
     end
+    self:checkGameOver()
     self:checkClearRows()    
     self:addNextPiece()
 end
@@ -173,6 +174,17 @@ function board:checkClearRows()
                     end
                     self:checkClearRows()
                 end
+            end
+        end
+    end
+end
+
+-- Restarts the game if a set piece is above the playfield.
+function board:checkGameOver()
+    for y = self.minY, self.minY + 2 do
+        for x = self.minX + 1, self.maxX - 1 do
+            if self.matrix[y][x] ~= 0 then
+                self:initMatrix()
             end
         end
     end
