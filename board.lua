@@ -21,11 +21,11 @@ local board = {
 
 -- Makes the matrix into a 2D matrix and sets all cells to 0.
 function board:initMatrix()
-    for x = self.minX, self.maxX do
-        self.matrix[x] = {}
-        for y = self.minY, self.maxY do
+    for y = self.minY, self.maxY do
+        self.matrix[y] = {}
+        for x = self.minX, self.maxX do
             if x ~= self.minX and x ~= self.maxX then
-                self.matrix[x][y] = 0
+                self.matrix[y][x] = 0
             end
         end
     end
@@ -41,15 +41,15 @@ end
 
 -- Draws the board, including background, pieces that have already landed, and the edge walls.
 function board:drawMatrix()
-    for x = self.minX, self.maxX do
-        for y = self.minY + 2, self.maxY do
-            if self.matrix[x][y] == 0 then
+    for y = self.minY + 2, self.maxY do
+        for x = self.minX, self.maxX do
+            if self.matrix[y][x] == 0 then
                 love.graphics.setColor(196, 207, 161)
                 love.graphics.rectangle("fill", 50 + x * self.spriteSize, 50 + y * self.spriteSize, self.spriteSize, self.spriteSize)
-            elseif self.matrix[x][y] == nil then
+            elseif self.matrix[y][x] == nil then
                 love.graphics.draw(self.boarder, 50 + x * self.spriteSize, 50 + y * self.spriteSize)
-            elseif self.matrix[x][y]:type() == "Image" then
-                love.graphics.draw(self.matrix[x][y], 50 + x * self.spriteSize, 50 + y * self.spriteSize)
+            elseif self.matrix[y][x]:type() == "Image" then
+                love.graphics.draw(self.matrix[y][x], 50 + x * self.spriteSize, 50 + y * self.spriteSize)
             end
         end
     end
@@ -92,9 +92,9 @@ function board:pieceWillCollide(xShift, yShift)
             if self.currentPiece.rotations[self.rotationIndex][y][x] == 1 then
                 if x + self.currentPieceLoc.x + xShift < self.minX or x + self.currentPieceLoc.x + xShift > self.maxX then
                     return true
-                elseif y + self.currentPieceLoc.y + yShift < self.minY then
+                elseif y + self.currentPieceLoc.y + yShift > self.maxY then
                     return true
-                elseif self.matrix[x + self.currentPieceLoc.x + xShift][y + self.currentPieceLoc.y + yShift] ~= 0 then
+                elseif self.matrix[y + self.currentPieceLoc.y + yShift][x + self.currentPieceLoc.x + xShift] ~= 0 then
                     return true
                 end
             end
@@ -121,10 +121,11 @@ function board:addPieceToMatrix()
     for y = 1, #self.currentPiece.rotations[self.rotationIndex] do
         for x = 1, #self.currentPiece.rotations[self.rotationIndex][y] do
             if self.currentPiece.rotations[self.rotationIndex][y][x] == 1 then
-                self.matrix[x + self.currentPieceLoc.x][y + self.currentPieceLoc.y] = self.currentPiece.sprite
+                self.matrix[y + self.currentPieceLoc.y][x + self.currentPieceLoc.x] = self.currentPiece.sprite
             end
         end
     end
+    self:checkClearRows()    
     self:addNextPiece()
 end
 
@@ -155,6 +156,25 @@ function board:rotatePiece()
             self.rotationIndex = 4
         else
             self.rotationIndex = self.rotationIndex - 1
+        end
+    end
+end
+
+-- Checks the board for cleared rows and calls itself to check for multiple clear rows.
+function board:checkClearRows()
+    for y = self.minY, self.maxY do
+        local fullRowCounter = 0
+        for x = self.minX + 1, self.maxX - 1 do
+            print(self.matrix[y][x])
+            if self.matrix[y][x] ~= 0 then
+                fullRowCounter = fullRowCounter + 1
+                if fullRowCounter == self.maxX - 2 then
+                    for i = y, self.minY + 1, -1 do
+                        self.matrix[i] = self.matrix[i - 1]
+                    end
+                    self:checkClearRows()
+                end
+            end
         end
     end
 end
