@@ -72,12 +72,16 @@ end
 
 -- Draws the next piece in the queue.
 function board:drawNextPiece()
+    love.graphics.setColor(107, 115, 83)
+    love.graphics.rectangle("fill", 325, 380, 90, 90)
+    love.graphics.setColor(196, 207, 161)
+    love.graphics.rectangle("fill", 330, 385, 80, 80)
     local nextPiece = self.pieceQueue[1]
     local defaultRotation = nextPiece.rotations[1]
     for y = 1, #defaultRotation do
         for x = 1, #defaultRotation[y] do
             if defaultRotation[y][x] == 1 then
-                love.graphics.draw(nextPiece.sprite, 320 + x * 20, 360 + y * 20)
+                love.graphics.draw(nextPiece.sprite, 310 + x * self.spriteSize, 365 + y * self.spriteSize)
             end
         end
     end
@@ -116,7 +120,7 @@ function board:shiftPiece(xShift, yShift)
     end
 end
 
--- Adds the currently falling piece to the matrix, meaning it has fallen.
+-- Adds the currently falling piece to the matrix, meaning it has landed.
 function board:addPieceToMatrix()
     for y = 1, #self.currentPiece.rotations[self.rotationIndex] do
         for x = 1, #self.currentPiece.rotations[self.rotationIndex][y] do
