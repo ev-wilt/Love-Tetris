@@ -4,18 +4,16 @@
 function love.load()
     love.window.setMode(800, 600, {resizable=true, vsync=false, minwidth=400, minheight=300})
     love.graphics.setBackgroundColor(65, 65, 65)
-    love.keyboard.setKeyRepeat(true)
     math.randomseed(os.time())
     board = require("board")
     dropTimer = 0
-    speedMultiplier = 1
     board:initMatrix()
     board:pushPiece()
     board:addNextPiece()
 end
 
 function love.update(dt)
-    dropTimer = dropTimer + dt * speedMultiplier
+    dropTimer = dropTimer + dt * board.speedMultiplier
     if dropTimer >= 1 and love.keyboard.isDown("s") == false then
         board:shiftPiece(0, 1)
         dropTimer = 0
@@ -23,6 +21,7 @@ function love.update(dt)
 end
 
 function love.keypressed(key)
+    love.keyboard.setKeyRepeat(true)
     if key == "s" then
         board:shiftPiece(0, 1)
     elseif key == "d" then 
@@ -30,6 +29,7 @@ function love.keypressed(key)
     elseif key == "a" then 
         board:shiftPiece(-1, 0)
     elseif key == "space" then
+        love.keyboard.setKeyRepeat(false)
         board:rotatePiece()
     elseif key == "escape" then
         love.event.quit()
@@ -40,4 +40,5 @@ function love.draw()
     board:drawMatrix()
     board:drawCurrentPiece()
     board:drawNextPiece()
+    board:drawStats()
 end

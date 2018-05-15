@@ -15,6 +15,11 @@ local board = {
     minX = 1, maxX = 12,
     minY = 1, maxY = 20,
     boarder = love.graphics.newImage("sprites/boarder.png"),
+    font = love.graphics.newFont("fonts/BitPotionExt.ttf", 30),
+    score = 0,
+    lines = 0,
+    level = 1,
+    speedMultiplier = 1,
     rotationIndex = 1,
     spriteSize = 20
 }
@@ -41,10 +46,10 @@ end
 
 -- Draws the board, including background, pieces that have already landed, and the edge walls.
 function board:drawMatrix()
+    love.graphics.setColor(196, 207, 161)
     for y = self.minY + 2, self.maxY do
         for x = self.minX, self.maxX do
             if self.matrix[y][x] == 0 then
-                love.graphics.setColor(196, 207, 161)
                 love.graphics.rectangle("fill", 50 + x * self.spriteSize, 50 + y * self.spriteSize, self.spriteSize, self.spriteSize)
             elseif self.matrix[y][x] == nil then
                 love.graphics.draw(self.boarder, 50 + x * self.spriteSize, 50 + y * self.spriteSize)
@@ -81,10 +86,34 @@ function board:drawNextPiece()
     for y = 1, #defaultRotation do
         for x = 1, #defaultRotation[y] do
             if defaultRotation[y][x] == 1 then
-                love.graphics.draw(nextPiece.sprite, 310 + x * self.spriteSize, 365 + y * self.spriteSize)
+                love.graphics.draw(nextPiece.sprite, 310 + x * self.spriteSize, 360 + y * self.spriteSize)
             end
         end
     end
+end
+
+-- Draws the current level, score, and lines.
+function board:drawStats()
+    love.graphics.setFont(self.font)
+    love.graphics.setColor(107, 115, 83)
+    love.graphics.rectangle("fill", 320, 300, 100, 65)
+    love.graphics.rectangle("fill", 320, 230, 100, 65)
+    love.graphics.rectangle("fill", 320, 160, 100, 65)
+
+    love.graphics.setColor(196, 207, 161)
+    love.graphics.rectangle("fill", 325, 305, 90, 55)
+    love.graphics.rectangle("fill", 325, 235, 90, 55)
+    love.graphics.rectangle("fill", 325, 165, 90, 55)
+
+    love.graphics.setColor(107, 115, 83)
+    love.graphics.print("Score", 350, 160)
+    love.graphics.print("Level", 350, 230)
+    love.graphics.print("Lines", 350, 300)
+
+    love.graphics.print(self.score, 330, 180)
+    love.graphics.print(self.level, 330, 250)
+    love.graphics.print(self.lines, 330, 320)
+
 end
 
 -- Checks for possible collisions when the piece is moved.
@@ -176,6 +205,13 @@ function board:checkClearRows()
                     for i = y, self.minY + 1, -1 do
                         self.matrix[i] = self.matrix[i - 1]
                     end
+                    if self.lines < 999 then
+                        self.lines = self.lines + 1
+                        if self.lines <= 200 and self.lines % 10 == 0 then
+                            self.level = self.lines / 10 + 1
+                            self.speedMultiplier = self.speedMultiplier + 0.3
+                        end
+                    end
                     self:checkClearRows()
                 end
             end
@@ -185,9 +221,14 @@ end
 
 -- Restarts the game if a set piece is above the playfield.
 function board:checkGameOver()
-    for y = self.minY, self.minY + 3 do
+    for y = self.minY + 2, self.minY + 3 do
         for x = self.minX + 1, self.maxX - 1 do
             if self.matrix[y][x] ~= 0 then
+                print(y)
+                print(x)
+                self.score = 0
+                self.lines = 0
+                self.level = 1
                 self:initMatrix()
             end
         end
